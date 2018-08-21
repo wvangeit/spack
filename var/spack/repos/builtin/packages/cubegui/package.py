@@ -22,23 +22,34 @@
 # License along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
+
 from spack import *
 
 
-class Cubelib(AutotoolsPackage):
-    """Component of CubeBundle: General purpose C++ library and tools """
+class Cubegui(AutotoolsPackage):
+    """CubeGUI Graphical explorer is the the GUI component of
+    Cube the profile viewer for Score-P and Scalasca profiles. It displays a
+    multi-dimensional performance space consisting of the dimensions:
+    - performance metric
+    - call path
+    - system resource
+    """
 
     homepage = "http://www.scalasca.org/software/cube-4.x/download.html"
-    url = "http://apps.fz-juelich.de/scalasca/releases/cube/4.4/dist/cubelib-4.4.tar.gz"
+    url = "http://apps.fz-juelich.de/scalasca/releases/cube/4.4/dist/cubegui-4.4.tar.gz"
 
-    version('4.4', 'c903f3c44d3228ebefd00c831966988e')
+    version('4.4', '0ade1cd54636e6c85efba1a4a6af0068 ')
 
-    depends_on('zlib')
-
+    depends_on('cubelib@4.4:')
+    depends_on('qt@4.6:')
+    
     def url_for_version(self, version):
-        filename = 'cubelib-{0}.tar.gz'.format(version)
+        filename = 'cubegui-{0}.tar.gz'.format(version)
 
         return 'http://apps.fz-juelich.de/scalasca/releases/cube/{0}/dist/{1}'.format(version.up_to(2), filename)
+    
+    def setup_environment(self, spack_env, run_env):
+        spack_env.set('QT_PATH', '$QTDIR')
 
     def configure_args(self):
         spec = self.spec
@@ -53,6 +64,7 @@ class Cubelib(AutotoolsPackage):
             configure_args.append('--with-nocross-compiler-suite=clang')
 
         return configure_args
+    
 
     def install(self, spec, prefix):
         make('install', parallel=False)
