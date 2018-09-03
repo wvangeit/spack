@@ -160,6 +160,7 @@ def clean_environment():
     env.unset('CPATH')
     env.unset('LD_RUN_PATH')
     env.unset('DYLD_LIBRARY_PATH')
+    env.unset('MAKEFLAGS')
 
     # Remove any macports installs from the PATH.  The macports ld can
     # cause conflicts with the built-in linker on el capitan.  Solves
