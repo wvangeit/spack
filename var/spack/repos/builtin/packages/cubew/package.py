@@ -34,7 +34,7 @@ class Cubew(AutotoolsPackage):
     version('4.4', 'e9beb140719c2ad3d971e1efb99e0916')
 
     depends_on('zlib')
-    
+
     def url_for_version(self, version):
         filename = 'cubew-{0}.tar.gz'.format(version)
 

@@ -42,8 +42,7 @@ class Scalasca(AutotoolsPackage):
     version('2.3.1', 'a83ced912b9d2330004cb6b9cefa7585')
     version('2.2.2', '2bafce988b0522d18072f7771e491ab9')
     version('2.1',   'bab9c2b021e51e2ba187feec442b96e6')
-    
-    
+
     variant('gui', default=False, description='Depend on CubeGUI')
     variant('scorep', default=False, description='Build with Score-P support')
 
@@ -70,12 +69,12 @@ class Scalasca(AutotoolsPackage):
 
         config_args = ["--enable-shared"]
 
+        config_args.append("--with-otf2=%s" % spec['otf2'].prefix.bin)
+
         if spec.satisfies('@:2.3.999'):
             config_args.append("--with-cube=%s" % spec['cube'].prefix.bin)
         elif spec.satisfies('@2.4:'):
             config_args.append("--with-cubew=%s" % spec['cubew'].prefix.bin)
-        
-        config_args.append("--with-otf2=%s" % spec['otf2'].prefix.bin)
 
         if spec['mpi'].name == 'openmpi':
             config_args.append("--with-mpi=openmpi")

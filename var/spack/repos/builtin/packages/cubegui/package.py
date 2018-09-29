@@ -42,12 +42,12 @@ class Cubegui(AutotoolsPackage):
 
     depends_on('cubelib@4.4:')
     depends_on('qt@4.6:')
-    
+
     def url_for_version(self, version):
         filename = 'cubegui-{0}.tar.gz'.format(version)
 
         return 'http://apps.fz-juelich.de/scalasca/releases/cube/{0}/dist/{1}'.format(version.up_to(2), filename)
-    
+
     def setup_environment(self, spack_env, run_env):
         spack_env.set('QT_PATH', '$QTDIR')
 
@@ -64,7 +64,6 @@ class Cubegui(AutotoolsPackage):
             configure_args.append('--with-nocross-compiler-suite=clang')
 
         return configure_args
-    
 
     def install(self, spec, prefix):
         make('install', parallel=False)
