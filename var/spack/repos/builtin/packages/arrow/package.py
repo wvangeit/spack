@@ -40,6 +40,8 @@ class Arrow(CMakePackage):
     depends_on('boost@1.60:')
     depends_on('cmake@3.2.0:', type='build')
     depends_on('flatbuffers@1.8.0 build_type=Release')  # only Release contains flatc
+    depends_on('python', when='+python')
+    depends_on('py-numpy', when='+python')
     depends_on('rapidjson')
     depends_on('snappy~shared')
     depends_on('zlib+pic')
@@ -48,6 +50,7 @@ class Arrow(CMakePackage):
     variant('build_type', default='Release',
             description='CMake build type',
             values=('Debug', 'FastDebug', 'Release'))
+    variant('python', default=False, description='Build Python interface')
 
     root_cmakelists_dir = 'cpp'
 
@@ -67,6 +70,8 @@ class Arrow(CMakePackage):
             "-DARROW_WITH_BROTLI=OFF",
             "-DARROW_WITH_LZ4=OFF",
         ]
+        if self.spec.satisfies('+python'):
+            args.append("-DARROW_PYTHON:BOOL=ON")
         for dep in ('flatbuffers', 'rapidjson', 'snappy', 'zlib', 'zstd'):
             args.append("-D{0}_HOME={1}".format(dep.upper(),
                                                 self.spec[dep].prefix))

@@ -25,16 +25,16 @@
 from spack import *
 
 
-class PyPy4j(PythonPackage):
-    """Enables Python programs to dynamically access arbitrary Java
-    objects."""
+class PyPyspark(PythonPackage):
+    """Python bindings for Apache Spark"""
 
-    homepage = "https://www.py4j.org/"
-    url = "https://pypi.io/packages/source/p/py4j/py4j-0.10.4.zip"
+    homepage = "http://spark.apache.org"
+    url      = "https://pypi.org/packages/source/p/pyspark/pyspark-2.3.0.tar.gz"
 
-    version('0.10.7', sha256='721189616b3a7d28212dfb2e7c6a1dd5147b03105f1fc37ff2432acd0e863fa5')
-    version('0.10.6', sha256='d3e7ac7c2171c290eba87e70aa5095b7eb6d6ad34789c007c88d550d9f575083')
-    version('0.10.4', sha256='406fbfdbcbbb398739f61fafd25724670a405a668eb08c1721d832eadce06aae')
-    version('0.10.3', sha256='f4570108ad014dd52a65c2288418e31cb8227b5ecc39ad7fc7fe98314f7a26f2')
+    version('2.3.2rc2',
+            url='https://github.com/matz-e/bbp-spark/releases/download/v2.3.2-rc2/pyspark-2.3.2-rc2-patched.tgz',
+            sha256='45c6ba87543009843c134b73e56510b936b7b130ee22c116263f8ebe32fdfa59')
+    version('2.3.0', sha256='0b3536910e154c36a94239f0ba0a201f476aadc72006409e5787198ffd01986e')
 
     depends_on('py-setuptools', type='build')
+    depends_on('py-py4j', type=('build', 'run'))

@@ -25,16 +25,12 @@
 from spack import *
 
 
-class PyPy4j(PythonPackage):
-    """Enables Python programs to dynamically access arbitrary Java
-    objects."""
+class PyJprops(PythonPackage):
+    """Java properties file parser for Python"""
 
-    homepage = "https://www.py4j.org/"
-    url = "https://pypi.io/packages/source/p/py4j/py4j-0.10.4.zip"
+    homepage = "https://github.com/mgood/jprops/"
+    url      = "https://pypi.org/packages/source/j/jprops/jprops-2.0.2.tar.gz"
 
-    version('0.10.7', sha256='721189616b3a7d28212dfb2e7c6a1dd5147b03105f1fc37ff2432acd0e863fa5')
-    version('0.10.6', sha256='d3e7ac7c2171c290eba87e70aa5095b7eb6d6ad34789c007c88d550d9f575083')
-    version('0.10.4', sha256='406fbfdbcbbb398739f61fafd25724670a405a668eb08c1721d832eadce06aae')
-    version('0.10.3', sha256='f4570108ad014dd52a65c2288418e31cb8227b5ecc39ad7fc7fe98314f7a26f2')
+    version('2.0.2', sha256='d297231833b6cd0a3f982a48fe148a7f9817f2895661743d166b267e4d3d5b2c')
 
     depends_on('py-setuptools', type='build')

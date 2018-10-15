@@ -1,6 +1,6 @@
 ##############################################################################
-# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
-# Produced at the Lawrence Livermore National Laboratory.
+# Copyright (c) 2017, Los Alamos National Security, LLC
+# Produced at the Los Alamos National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
@@ -25,16 +25,25 @@
 from spack import *
 
 
-class PyPy4j(PythonPackage):
-    """Enables Python programs to dynamically access arbitrary Java
-    objects."""
+class PyBb5(PythonPackage):
+    """Utilities for Blue Brain 5 Super Computer
+    """
+    homepage = "https://github.com/BlueBrain/pybb5"
+    url      = "git@github.com:BlueBrain/pybb5.git"
 
-    homepage = "https://www.py4j.org/"
-    url = "https://pypi.io/packages/source/p/py4j/py4j-0.10.4.zip"
+    version('develop', git=url)
+    version('0.2', git=url, tag='v0.2', preferred=True, clean=False)
 
-    version('0.10.7', sha256='721189616b3a7d28212dfb2e7c6a1dd5147b03105f1fc37ff2432acd0e863fa5')
-    version('0.10.6', sha256='d3e7ac7c2171c290eba87e70aa5095b7eb6d6ad34789c007c88d550d9f575083')
-    version('0.10.4', sha256='406fbfdbcbbb398739f61fafd25724670a405a668eb08c1721d832eadce06aae')
-    version('0.10.3', sha256='f4570108ad014dd52a65c2288418e31cb8227b5ecc39ad7fc7fe98314f7a26f2')
+    patch('purge-scaffold.patch')
 
+    depends_on('python@3.6:')
     depends_on('py-setuptools', type='build')
+    depends_on('py-setuptools-scm', type='build')
+
+    depends_on('py-clustershell', type=('build', 'run'))
+    depends_on('py-docopt', type=('build', 'run'))
+    depends_on('py-matplotlib', type=('build', 'run'))
+    depends_on('py-pandas', type=('build', 'run'))
+    depends_on('py-requests', type=('build', 'run'))
+    depends_on('py-seaborn', type=('build', 'run'))
+    depends_on('py-six', type=('build', 'run'))
