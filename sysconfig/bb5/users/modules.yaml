@@ -35,6 +35,7 @@ modules:
       - functionalizer
       - git
       - neurodamus
+      - nrnh5
       - parquet-converters
       - python
       - spykfunc
