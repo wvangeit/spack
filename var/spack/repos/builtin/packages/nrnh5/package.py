@@ -1,6 +1,6 @@
 ##############################################################################
-# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
-# Produced at the Lawrence Livermore National Laboratory.
+# Copyright (c) 2017, Los Alamos National Security, LLC
+# Produced at the Los Alamos National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
@@ -23,21 +23,34 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
 from spack import *
-import os
-import shutil
 
 
-class NeurodamusBase(Package):
-    """Library of channels developed by Blue Brain Project, EPFL"""
+class Nrnh5(CMakePackage):
 
-    homepage = "ssh://bbpcode.epfl.ch/sim/neurodamus/bbp"
-    url      = "ssh://bbpcode.epfl.ch/sim/neurodamus/bbp"
+    """Neuron HDF5 library developed by Blue Brain Project, EPFL"""
 
-    version('master',      git=url)
-    version('hippocampus', git=url, branch='sandbox/king/hippocampus')
-    version('plasticity',  git=url, branch='sandbox/king/saveupdate_v6support_mask', preferred=True)
+    homepage = "https://bbpcode.epfl.ch/sim/nrnh5"
+    url      = "ssh://bbpcode.epfl.ch/sim/nrnh5"
 
-    def install(self, spec, prefix):
-        shutil.copytree('lib', prefix.lib)
-        if os.path.isdir('python'):
-            shutil.copytree('python', prefix.python)
+    version('develop', git=url, preferred=True)
+
+    variant('tests', default=False, description="Build unit tests")
+
+    depends_on('cmake@3.2:', type='build')
+    depends_on('boost', when='+tests')
+    depends_on('hdf5')
+    depends_on('mpi')
+
+    def cmake_args(self):
+        spec   = self.spec
+        options = []
+
+        if spec.satisfies('~tests'):
+            options.append('-DUNIT_TESTS=OFF')
+        
+        options.extend([
+            '-DCMAKE_C_COMPILER={}'.format(self.spec['mpi'].mpicc),
+            '-DCMAKE_CXX_COMPILER={}'.format(self.spec['mpi'].mpicxx)
+        ])
+
+        return options
