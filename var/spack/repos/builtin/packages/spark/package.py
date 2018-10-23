@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
 import re
-import shutil
 
 from spack import *
 
@@ -39,9 +38,13 @@ class Spark(Package):
     variant('hadoop', default=False,
             description='Build with Hadoop')
 
-    depends_on('java', type=('build', 'run'))
+    depends_on('java@8', type=('build', 'run'))
     depends_on('hadoop', when='+hadoop', type=('build', 'run'))
 
+    version('2.3.2rc2',
+            url="https://github.com/matz-e/bbp-spark/releases/download/v2.3.2-rc2/spark-2.3.2-bin-rc2-patched.tgz",
+            sha256='b11c8fe0f0454bd5c4ab24a689becf0dc089c4627b3a7374b6a304e7d048dab9')
+    version('2.3.0', 'db21021b8e877b219ab886097ef42344')
     version('2.1.0', '21d4471e78250775b1fa7c0e6c3a1326')
     version('2.0.2', '32110c1bb8f081359738742bd26bced1')
     version('2.0.0', '8a5307d973da6949a385aefb6ff747bb')
@@ -63,14 +66,10 @@ class Spark(Package):
         install_dir('yarn')
 
         # required for spark to recognize binary distribution
-        shutil.copy('RELEASE', prefix)
+        install('RELEASE', prefix)
 
     @when('+hadoop')
     def setup_environment(self, spack_env, run_env):
-
-        env['JAVA_HOME'] = self.spec['java'].prefix
-        # spack_env.set('JAVA_HOME', self.spec['jdk'].prefix)
-
         hadoop = self.spec['hadoop'].command
         hadoop_classpath = hadoop('classpath', output=str)
 

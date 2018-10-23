@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -36,5 +36,5 @@ class PyCutadapt(PythonPackage):
     version('1.13', '2d2d14e0c20ad53d7d84b57bc3e63b4c')
 
     depends_on('python@2.6:', type=('build', 'run'))
-    depends_on('py-setuptools',        type=('build'))
+    depends_on('py-setuptools', type=('build', 'run'))
     depends_on('py-xopen@0.1.1:', type=('build', 'run'))

@@ -6,7 +6,7 @@
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,14 +32,18 @@ class Portage(CMakePackage):
        remapping library for transfer of field data between meshes.
     """
     homepage = "http://portage.lanl.gov/"
-    url      = "https://github.com/laristra/portage/tarball/v1.0"
+    git      = "https://github.com/laristra/portage.git"
 
-    version('develop', git='https://github.com/laristra/portage', branch='master', submodules=True)
+    # tarballs don't have submodules, so use git tags
+    version('develop', branch='master', submodules=True)
+    version('1.1.1', tag='v1.1.1', submodules=True)
+    version('1.1.0', tag='v1.1.0', submodules=True)
 
     variant('mpi', default=True, description='Support MPI')
 
     depends_on("cmake@3.1:", type='build')
     depends_on('mpi', when='+mpi')
+    depends_on('lapack')
 
     def cmake_args(self):
         options = ['-DENABLE_UNIT_TESTS=ON', '-DENABLE_APP_TESTS=ON']
@@ -47,7 +51,9 @@ class Portage(CMakePackage):
         if '+mpi' in self.spec:
             options.extend([
                 '-DENABLE_MPI=ON',
-                '-DENABLE_MPI_CXX_BINDINGS=ON'
+                '-DENABLE_MPI_CXX_BINDINGS=ON',
+                '-DCMAKE_CXX_COMPILER=%s' % self.spec['mpi'].mpicxx,
+                '-DCMAKE_C_COMPILER=%s' % self.spec['mpi'].mpicc,
             ])
         else:
             options.append('-DENABLE_MPI=OFF')

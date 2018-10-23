@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,9 @@
 #
 # This file is part of Spack and sets up the spack environment for
 # bash and zsh.  This includes dotkit support, module support, and
-# it also puts spack in your path.  Source it like this:
+# it also puts spack in your path.  The script also checks that
+# at least module support exists, and provides suggestions if it
+# doesn't. Source it like this:
 #
 #    . /path/to/spack/share/spack/setup-env.sh
 #
@@ -78,14 +80,22 @@ function spack {
         return
     fi
 
-    _sp_subcommand=$1; shift
-    _sp_spec="$@"
+    _sp_subcommand=""
+    if [ -n "$1" ]; then
+        _sp_subcommand="$1"
+        shift
+    fi
+    _sp_spec=("$@")
 
     # Filter out use and unuse.  For any other commands, just run the
     # command.
     case $_sp_subcommand in
         "cd")
-            _sp_arg="$1"; shift
+            _sp_arg=""
+            if [ -n "$1" ]; then
+                _sp_arg="$1"
+                shift
+            fi
             if [ "$_sp_arg" = "-h" ]; then
                 command spack cd -h
             else
@@ -111,7 +121,7 @@ function spack {
                 shift
             done
 
-            _sp_spec="$@"
+            _sp_spec=("$@")
 
             # Here the user has run use or unuse with a spec.  Find a matching
             # spec using 'spack module find', then use the appropriate module
@@ -119,20 +129,28 @@ function spack {
             # If spack module command comes back with an error, do nothing.
             case $_sp_subcommand in
                 "use")
-                    if _sp_full_spec=$(command spack $_sp_flags module loads --input-only $_sp_subcommand_args --module-type dotkit $_sp_spec); then
+                    if _sp_full_spec=$(command spack $_sp_flags module dotkit find $_sp_subcommand_args "${_sp_spec[@]}"); then
                         use $_sp_module_args $_sp_full_spec
+                    else
+                        $(exit 1)
                     fi ;;
                 "unuse")
-                    if _sp_full_spec=$(command spack $_sp_flags module loads --input-only $_sp_subcommand_args --module-type dotkit $_sp_spec); then
+                    if _sp_full_spec=$(command spack $_sp_flags module dotkit find $_sp_subcommand_args "${_sp_spec[@]}"); then
                         unuse $_sp_module_args $_sp_full_spec
+                    else
+                        $(exit 1)
                     fi ;;
                 "load")
-                    if _sp_full_spec=$(command spack $_sp_flags module loads --input-only $_sp_subcommand_args --module-type tcl $_sp_spec); then
+                    if _sp_full_spec=$(command spack $_sp_flags module tcl find $_sp_subcommand_args "${_sp_spec[@]}"); then
                         module load $_sp_module_args $_sp_full_spec
+                    else
+                        $(exit 1)
                     fi ;;
                 "unload")
-                    if _sp_full_spec=$(command spack $_sp_flags module loads --input-only $_sp_subcommand_args --module-type tcl $_sp_spec); then
+                    if _sp_full_spec=$(command spack $_sp_flags module tcl find $_sp_subcommand_args "${_sp_spec[@]}"); then
                         module unload $_sp_module_args $_sp_full_spec
+                    else
+                        $(exit 1)
                     fi ;;
             esac
             ;;
@@ -189,19 +207,57 @@ if [ -z "$_sp_source_file" ]; then
 fi
 
 #
-# Set up modules and dotkit search paths in the user environment
+# Find root directory and add bin to path.
 #
 _sp_share_dir=$(cd "$(dirname $_sp_source_file)" && pwd)
 _sp_prefix=$(cd "$(dirname $(dirname $_sp_share_dir))" && pwd)
 _spack_pathadd PATH       "${_sp_prefix%/}/bin"
+export SPACK_ROOT=${_sp_prefix}
 
-_sp_sys_type=$(spack-python -c 'print(spack.architecture.sys_type())')
-_sp_dotkit_root=$(spack-python -c "print(spack.util.path.canonicalize_path(spack.config.get_config('config').get('module_roots', {}).get('dotkit')))")
-_sp_tcl_root=$(spack-python -c "print(spack.util.path.canonicalize_path(spack.config.get_config('config').get('module_roots', {}).get('tcl')))")
+#
+# Determine which shell is being used
+#
+function _spack_determine_shell() {
+	ps -p $$ | tail -n 1 | awk '{print $4}' | sed 's/^-//' | xargs basename
+}
+export SPACK_SHELL=$(_spack_determine_shell)
+
+#
+# Check whether a function of the given name is defined
+#
+function _spack_fn_exists() {
+	LANG= type $1 2>&1 | grep -q 'function'
+}
+
+need_module="no"
+if ! _spack_fn_exists use && ! _spack_fn_exists module; then
+	need_module="yes"
+fi;
+
+
+#
+# make available environment-modules
+#
+if [ "${need_module}" = "yes" ]; then
+    eval `spack --print-shell-vars sh,modules`
+
+    # _sp_module_prefix is set by spack --print-sh-vars
+    if [ "${_sp_module_prefix}" != "not_installed" ]; then
+        #activate it!
+        export MODULE_PREFIX=${_sp_module_prefix}
+        _spack_pathadd PATH "${MODULE_PREFIX}/Modules/bin"
+        module() { eval `${MODULE_PREFIX}/Modules/bin/modulecmd ${SPACK_SHELL} $*`; }
+    fi;
+else
+    eval `spack --print-shell-vars sh`
+fi;
+
+#
+# set module system roots
+#
 _spack_pathadd DK_NODE    "${_sp_dotkit_root%/}/$_sp_sys_type"
 _spack_pathadd MODULEPATH "${_sp_tcl_root%/}/$_sp_sys_type"
 
-#
 # Add programmable tab completion for Bash
 #
 if [ -n "${BASH_VERSION:-}" ]; then

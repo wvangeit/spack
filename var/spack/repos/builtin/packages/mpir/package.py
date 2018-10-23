@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,10 +30,11 @@ class Mpir(Package):
 
     homepage = "https://github.com/wbhart/mpir"
     url      = "https://github.com/wbhart/mpir/archive/mpir-2.7.0.tar.gz"
+    git      = "https://github.com/wbhart/mpir.git"
 
+    version('develop', branch='master')
     version('2.7.0', '985b5d57bd0e74c74125ee885b9c8f71')
     version('2.6.0', 'ec17d6a7e026114ceb734b2466aa0a91')
-    version('develop', git='https://github.com/wbhart/mpir.git')
 
     # This setting allows mpir to act as a drop-in replacement for gmp
     variant('gmp_compat',        default=False,

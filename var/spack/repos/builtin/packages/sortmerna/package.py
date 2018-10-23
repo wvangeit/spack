@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,9 +30,9 @@ class Sortmerna(CMakePackage):
        reads in metatranscriptomic and metagenomic data"""
 
     homepage = "https://github.com/biocore/sortmerna"
-    url      = "https://github.com/biocore/sortmerna"
+    git      = "https://github.com/biocore/sortmerna.git"
 
-    version('2017-07-13', git='https://github.com/biocore/sortmerna.git', commit='8bde6fa113a5d99a23ae81b48eeea6760e966094')
+    version('2017-07-13', commit='8bde6fa113a5d99a23ae81b48eeea6760e966094')
 
     depends_on('zlib')
 

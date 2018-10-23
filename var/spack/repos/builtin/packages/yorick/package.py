@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,8 +24,6 @@
 ##############################################################################
 from spack import *
 import os
-import shutil
-import glob
 
 
 class Yorick(Package):
@@ -40,12 +38,11 @@ class Yorick(Package):
 
     homepage = "http://dhmunro.github.io/yorick-doc/"
     url      = "https://github.com/dhmunro/yorick/archive/y_2_2_04.tar.gz"
+    git      = "https://github.com/dhmunro/yorick.git"
 
+    version('master', branch='master')
     version('2.2.04', '1b5b0da6ad81b2d9dba64d991ec17939')
-    version('master', branch='master',
-            git='https://github.com/dhmunro/yorick.git')
-    version('f90-plugin', branch='f90-plugin',
-            git='https://github.com/trmwzm/yorick.git')
+    version('f90-plugin', branch='f90-plugin')
 
     variant('X', default=False, description='Enable X11 support')
 
@@ -75,13 +72,4 @@ class Yorick(Package):
         make()
         make("install")
 
-        try:
-            os.makedirs(prefix)
-        except OSError:
-            pass
-        os.chdir("relocate")
-        for f in glob.glob('*'):
-            if os.path.isdir(f):
-                shutil.copytree(f, os.path.join(prefix, f))
-            else:
-                shutil.copy2(f, os.path.join(prefix, f))
+        install_tree('relocate', prefix)

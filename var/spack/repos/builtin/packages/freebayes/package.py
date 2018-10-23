@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,9 +30,9 @@ class Freebayes(MakefilePackage):
        genotyping."""
 
     homepage = "https://github.com/ekg/freebayes"
+    git      = "https://github.com/ekg/freebayes.git"
 
-    version('1.1.0', git='https://github.com/ekg/freebayes.git',
-            commit='39e5e4bcb801556141f2da36aba1df5c5c60701f',
+    version('1.1.0', commit='39e5e4bcb801556141f2da36aba1df5c5c60701f',
             submodules=True)
 
     depends_on('cmake', type='build')

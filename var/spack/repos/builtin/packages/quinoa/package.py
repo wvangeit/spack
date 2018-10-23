@@ -6,7 +6,7 @@
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the LICENSE file for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,12 +34,12 @@ class Quinoa(CMakePackage):
     """
 
     homepage = "http://quinoacomputing.org"
-    url      = "https://github.com/quinoacomputing/quinoa/tarball/quinoa_v0.1"
+    git      = "https://github.com/quinoacomputing/quinoa.git"
 
-    version('develop', git='https://github.com/quinoacomputing/quinoa', branch='master')
+    version('develop', branch='master')
 
     depends_on('hdf5+mpi')
-    depends_on("charm backend=mpi")
+    depends_on("charmpp backend=mpi")
     depends_on("trilinos+exodus")
     depends_on("boost")
     depends_on("hypre~internal-superlu")

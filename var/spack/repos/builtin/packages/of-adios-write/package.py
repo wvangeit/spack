@@ -5,7 +5,7 @@
 # and is released as part of spack under the LGPL license.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for the LLNL notice and LGPL.
 #
 # License
@@ -35,12 +35,12 @@
 # OpenFOAM distribution.
 #
 ##############################################################################
-from spack import *
-from spack.environment import *
+import os
+
 import llnl.util.tty as tty
 
-import os
-from spack.pkg.builtin.openfoam_com import *
+from spack import *
+from spack.pkg.builtin.openfoam_com import add_extra_files
 
 
 class OfAdiosWrite(Package):
@@ -56,11 +56,11 @@ class OfAdiosWrite(Package):
     # Currently only via git, but with some branches corresponding to main
     # OpenFOAM releases.
     homepage = "https://develop.openfoam.com/Community/feature-adiosWrite/"
-    gitrepo  = "https://develop.openfoam.com/Community/feature-adiosWrite.git"
+    git      = "https://develop.openfoam.com/Community/feature-adiosWrite.git"
 
-    version('develop', branch='develop', git=gitrepo)
-    version('1706', branch='v1706', git=gitrepo)
-    version('1612', branch='v1612', git=gitrepo)
+    version('develop', branch='develop')
+    version('1706', branch='v1706')
+    version('1612', branch='v1612')
 
     variant('source', default=True, description='Install library source')
 

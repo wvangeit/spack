@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,19 +32,31 @@ class Bzip2(Package):
     compressors), whilst being around twice as fast at compression
     and six times faster at decompression."""
 
-    homepage = "http://www.bzip.org"
-    url      = "http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
-    list_url = "http://www.bzip.org/downloads.html"
+    # FIXME: The bzip.org domain has expired:
+    # https://lwn.net/Articles/762264/
+    # This package will need to be updated when a new home is found.
+    homepage = "https://sourceware.org/bzip2/"
+    url      = "https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz"
 
     version('1.0.6', '00b516f4704d4a7cb50a1d97e6e8e15b')
 
     variant('shared', default=True, description='Enables the build of shared libraries.')
 
+    # override default implementation
+    @property
+    def libs(self):
+        shared = '+shared' in self.spec
+        return find_libraries(
+            'libbz2', root=self.prefix, shared=shared, recursive=True
+        )
+
     def patch(self):
         # bzip2 comes with two separate Makefiles for static and dynamic builds
         # Tell both to use Spack's compiler wrapper instead of GCC
-        filter_file(r'^CC=gcc', 'CC=cc', 'Makefile')
-        filter_file(r'^CC=gcc', 'CC=cc', 'Makefile-libbz2_so')
+        filter_file(r'^CC=gcc', 'CC={0}'.format(spack_cc), 'Makefile')
+        filter_file(
+            r'^CC=gcc', 'CC={0}'.format(spack_cc), 'Makefile-libbz2_so'
+        )
 
         # The Makefiles use GCC flags that are incompatible with PGI
         if self.compiler.name == 'pgi':

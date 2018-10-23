@@ -6,7 +6,7 @@
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@ class MadNumdiff(CMakePackage):
 
     homepage = "https://github.com/quinoacomputing/ndiff"
     url      = "https://github.com/quinoacomputing/ndiff/tarball/20150724"
+    git      = "https://github.com/quinoacomputing/ndiff.git"
 
-    version('develop', git='https://github.com/quinoacomputing/ndiff', branch='master')
+    version('develop', branch='master')
     version('20150724', '7723c0f2499aea8fd960377c5bed28d8')

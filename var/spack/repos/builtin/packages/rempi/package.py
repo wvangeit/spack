@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,7 @@ class Rempi(AutotoolsPackage):
     homepage = "https://github.com/PRUNERS/ReMPI"
     url      = "https://github.com/PRUNERS/ReMPI/releases/download/v1.0.0/ReMPI-1.0.0.tar.gz"
 
+    version("1.1.0", "05b872a6f3e2f49a2fc6112a844c7f43")
     version("1.0.0", "32c780a6a74627b5796bea161d4c4733")
 
     depends_on("mpi")

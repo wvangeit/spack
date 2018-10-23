@@ -6,7 +6,7 @@
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -36,9 +36,9 @@ class Vpic(CMakePackage):
        order finite-difference-time-domain (FDTD) solve.
     """
     homepage = "https://github.com/lanl/vpic"
-    url      = "https://github.com/lanl/vpic/tarball/v1.0"
+    git      = "https://github.com/lanl/vpic.git"
 
-    version('develop', git='https://github.com/lanl/vpic', branch='master', submodules=True)
+    version('develop', branch='master', submodules=True)
 
     depends_on("cmake@3.1:", type='build')
     depends_on('mpi')

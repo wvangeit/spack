@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,9 +29,9 @@ class Graphmap(MakefilePackage):
     """A highly sensitive and accurate mapper for long, error-prone reads"""
 
     homepage = "https://github.com/isovic/graphmap"
-    url      = "https://github.com/isovic/graphmap/archive/v0.3.0.tar.gz"
+    git      = "https://github.com/isovic/graphmap.git"
 
-    version('0.3.0', git='https://github.com/isovic/graphmap.git', commit='eb8c75d68b03be95464318afa69b645a59f8f6b7')
+    version('0.3.0', commit='eb8c75d68b03be95464318afa69b645a59f8f6b7')
 
     def edit(self, spec, prefix):
         mkdirp(prefix.bin)

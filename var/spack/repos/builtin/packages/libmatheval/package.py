@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,9 +34,16 @@ class Libmatheval(AutotoolsPackage):
     compute symbolic derivatives and output expressions to strings."""
 
     homepage = "https://www.gnu.org/software/libmatheval/"
-    url      = "https://ftp.gnu.org/gnu/libmatheval/libmatheval-1.1.11.tar.gz"
+    url      = "https://ftpmirror.gnu.org/libmatheval/libmatheval-1.1.11.tar.gz"
 
     version('1.1.11', '595420ea60f6ddd75623847f46ca45c4')
 
     # Only needed for unit tests, but configure crashes without it
     depends_on('guile', type='build')
+
+    # guile 2.0 provides a deprecated interface for the unit test using guile
+    patch('guile-2.0.patch', when='^guile@2.0')
+
+    # guile 2.2 does not support deprecated functions any longer
+    # the patch skips the unit tests
+    patch('guile-2.2.patch', when='^guile@2.2:')

@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -39,14 +39,12 @@ class SstDumpi(AutotoolsPackage):
 
     homepage = "http://sst.sandia.gov/about_dumpi.html"
     url      = "https://github.com/sstsimulator/sst-dumpi/archive/6.1.0.tar.gz"
+    git      = "https://github.com/sstsimulator/sst-dumpi.git"
+
+    version('master', branch='master')
+    version('6.1.0', '31c3f40a697dc85bf23dd34270982319')
 
     depends_on('autoconf@1.68:', type='build')
     depends_on('automake@1.11.1:', type='build')
     depends_on('libtool@1.2.4:', type='build')
     depends_on('m4', type='build')
-
-    version('master',
-          git='https://github.com/sstsimulator/sst-dumpi.git',
-          branch='master')
-
-    version('6.1.0', '31c3f40a697dc85bf23dd34270982319')

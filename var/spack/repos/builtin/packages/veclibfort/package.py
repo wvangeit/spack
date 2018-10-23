@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,9 +33,10 @@ class Veclibfort(Package):
 
     homepage = "https://github.com/mcg1969/vecLibFort"
     url      = "https://github.com/mcg1969/vecLibFort/archive/0.4.2.tar.gz"
+    git      = "https://github.com/mcg1969/vecLibFort.git"
 
+    version('develop', branch='master')
     version('0.4.2', '83395ffcbe8a2122c3f726a5c3a7cf93')
-    version('develop', git='https://github.com/mcg1969/vecLibFort.git')
 
     variant('shared', default=True,
             description="Build shared libraries as well as static libs.")
@@ -48,7 +49,7 @@ class Veclibfort(Package):
     def libs(self):
         shared = True if '+shared' in self.spec else False
         return find_libraries(
-            'libvecLibFort', root=self.prefix, shared=shared, recurse=True
+            'libvecLibFort', root=self.prefix, shared=shared, recursive=True
         )
 
     def install(self, spec, prefix):

@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 
 # Produced at the Lawrence Livermore National Laboratory.
 #
@@ -7,7 +7,7 @@
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the LICENSE file for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -41,9 +41,9 @@ class Dataspaces(AutotoolsPackage):
 
     homepage = "http://www.dataspaces.org"
     url      = "http://personal.cac.rutgers.edu/TASSL/projects/data/downloads/dataspaces-1.6.2.tar.gz"
+    git      = "https://github.com/melrom/dataspaces.git"
 
-    version('develop', git='https://github.com/melrom/dataspaces.git',
-            branch='master')
+    version('develop', branch='master')
     version('1.6.2', '73caa4920b6f2c0c6d6cb87640ff04be')
 
     variant('dimes',
@@ -70,7 +70,7 @@ class Dataspaces(AutotoolsPackage):
     depends_on('libtool', type='build')
     depends_on('mpi', when='+mpi')
 
-    def autoreconf(spec, prefix, self):
+    def autoreconf(self, spec, prefix):
         bash = which('bash')
         bash('./autogen.sh')
 

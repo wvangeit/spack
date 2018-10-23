@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,11 +31,12 @@ class Symengine(CMakePackage):
 
     homepage = "https://github.com/symengine/symengine"
     url      = "https://github.com/symengine/symengine/archive/v0.2.0.tar.gz"
+    git      = "https://github.com/symengine/symengine.git"
 
+    version('develop', branch='master')
     version('0.3.0', 'e61d7513cca4963cd062616891de54c6')
     version('0.2.0', '45401561add36a13c1f0b0c5f8d7422d')
     version('0.1.0', '41ad7daed61fc5a77c285eb6c7303425')
-    version('develop', git='https://github.com/symengine/symengine.git')
 
     variant('boostmp',      default=False,
             description='Compile with Boost multi-precision integer library')

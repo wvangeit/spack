@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the LICENSE file for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,11 +35,14 @@ class Xsbench(MakefilePackage):
     homepage = "https://github.com/ANL-CESAR/XSBench/"
     url = "https://github.com/ANL-CESAR/XSBench/archive/v13.tar.gz"
 
-    tags = ['proxy-app']
+    tags = ['proxy-app', 'ecp-proxy-app']
 
+    version('18', sha256='a9a544eeacd1be8d687080d2df4eeb701c04eda31d3806e7c3ea1ff36c26f4b0')
+    version('14', '94d5d28eb031fd4ef35507c9c1862169')
     version('13', '72a92232d2f5777fb52f5ea4082aff37')
 
-    variant('mpi', default=False, description='Build with MPI support')
+    variant('mpi', default=True, description='Build with MPI support')
+    variant('openmp', default=True, description='Build with OpenMP support')
 
     depends_on('mpi', when='+mpi')
 
@@ -53,8 +56,11 @@ class Xsbench(MakefilePackage):
         cflags = '-std=gnu99'
         if '+mpi' in self.spec:
             targets.append('CC={0}'.format(self.spec['mpi'].mpicc))
+        else:
+            targets.append('CC={0}'.format(self.compiler.cxx))
 
-        cflags += ' ' + self.compiler.openmp_flag
+        if '+openmp' in self.spec:
+            cflags += ' ' + self.compiler.openmp_flag
         targets.append('CFLAGS={0}'.format(cflags))
         targets.append('LDFLAGS=-lm')
 

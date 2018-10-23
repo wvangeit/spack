@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,11 +26,12 @@
 These tests check Spec DAG operations using dummy packages.
 """
 import pytest
-import spack
 import spack.architecture
 import spack.package
 
-from spack.spec import Spec, canonical_deptype, alldeps
+from spack.spec import Spec
+from spack.dependency import all_deptypes, Dependency, canonical_deptype
+from spack.test.conftest import MockPackage, MockPackageMultiRepo
 
 
 def check_links(spec_to_check):
@@ -51,9 +52,9 @@ def saved_deps():
 @pytest.fixture()
 def set_dependency(saved_deps):
     """Returns a function that alters the dependency information
-    for a package.
+    for a package in the ``saved_deps`` fixture.
     """
-    def _mock(pkg_name, spec, deptypes=spack.alldeps):
+    def _mock(pkg_name, spec, deptypes=all_deptypes):
         """Alters dependence information for a package.
 
         Adds a dependency on <spec> to pkg. Use this to mock up constraints.
@@ -64,12 +65,82 @@ def set_dependency(saved_deps):
         if pkg_name not in saved_deps:
             saved_deps[pkg_name] = (pkg, pkg.dependencies.copy())
 
-        pkg.dependencies[spec.name] = {Spec(pkg_name): spec}
-        pkg.dependency_types[spec.name] = set(deptypes)
+        cond = Spec(pkg.name)
+        dependency = Dependency(pkg, spec, type=deptypes)
+        pkg.dependencies[spec.name] = {cond: dependency}
     return _mock
 
 
-@pytest.mark.usefixtures('refresh_builtin_mock')
+@pytest.mark.usefixtures('config')
+def test_test_deptype():
+    """Ensure that test-only dependencies are only included for specified
+packages in the following spec DAG::
+
+        w
+       /|
+      x y
+        |
+        z
+
+w->y deptypes are (link, build), w->x and y->z deptypes are (test)
+
+"""
+    default = ('build', 'link')
+    test_only = ('test',)
+
+    x = MockPackage('x', [], [])
+    z = MockPackage('z', [], [])
+    y = MockPackage('y', [z], [test_only])
+    w = MockPackage('w', [x, y], [test_only, default])
+
+    mock_repo = MockPackageMultiRepo([w, x, y, z])
+    with spack.repo.swap(mock_repo):
+        spec = Spec('w')
+        spec.concretize(tests=(w.name,))
+
+        assert ('x' in spec)
+        assert ('z' not in spec)
+
+
+@pytest.mark.usefixtures('config')
+def test_conditional_dep_with_user_constraints():
+    """This sets up packages X->Y such that X depends on Y conditionally. It
+    then constructs a Spec with X but with no constraints on X, so that the
+    initial normalization pass cannot determine whether the constraints are
+    met to add the dependency; this checks whether a user-specified constraint
+    on Y is applied properly.
+    """
+    default = ('build', 'link')
+
+    y = MockPackage('y', [], [])
+    x_on_y_conditions = {
+        y.name: {
+            'x@2:': 'y'
+        }
+    }
+    x = MockPackage('x', [y], [default], conditions=x_on_y_conditions)
+
+    mock_repo = MockPackageMultiRepo([x, y])
+    with spack.repo.swap(mock_repo):
+        spec = Spec('x ^y@2')
+        spec.concretize()
+
+        assert ('y@2' in spec)
+
+    with spack.repo.swap(mock_repo):
+        spec = Spec('x@1')
+        spec.concretize()
+
+        assert ('y' not in spec)
+
+    with spack.repo.swap(mock_repo):
+        spec = Spec('x')
+        spec.concretize()
+
+        assert ('y@3' in spec)
+
+
+@pytest.mark.usefixtures('mutable_mock_packages')
 class TestSpecDag(object):
 
     def test_conflicting_package_constraints(self, set_dependency):
@@ -267,18 +338,19 @@ class TestSpecDag(object):
         with pytest.raises(spack.spec.UnsatisfiableArchitectureSpecError):
             spec.normalize()
 
+    @pytest.mark.usefixtures('config')
     def test_invalid_dep(self):
         spec = Spec('libelf ^mpich')
         with pytest.raises(spack.spec.InvalidDependencyError):
-            spec.normalize()
+            spec.concretize()
 
         spec = Spec('libelf ^libdwarf')
         with pytest.raises(spack.spec.InvalidDependencyError):
-            spec.normalize()
+            spec.concretize()
 
         spec = Spec('mpich ^dyninst ^libelf')
         with pytest.raises(spack.spec.InvalidDependencyError):
-            spec.normalize()
+            spec.concretize()
 
     def test_equal(self):
         # Different spec structures to test for equality
@@ -553,7 +625,7 @@ class TestSpecDag(object):
                  'dtlink1', 'dtlink3', 'dtlink4', 'dtrun1', 'dtlink5',
                  'dtrun3', 'dtbuild3']
 
-        traversal = dag.traverse(deptype=spack.alldeps)
+        traversal = dag.traverse(deptype=all)
         assert [x.name for x in traversal] == names
 
     def test_deptype_traversal_run(self):
@@ -802,12 +874,16 @@ class TestSpecDag(object):
 
     def test_canonical_deptype(self):
         # special values
-        assert canonical_deptype(all) == alldeps
-        assert canonical_deptype('all') == alldeps
-        assert canonical_deptype(None) == alldeps
+        assert canonical_deptype(all) == all_deptypes
+        assert canonical_deptype('all') == all_deptypes
 
-        # everything in alldeps is canonical
-        for v in alldeps:
+        with pytest.raises(ValueError):
+            canonical_deptype(None)
+        with pytest.raises(ValueError):
+            canonical_deptype([None])
+
+        # everything in all_deptypes is canonical
+        for v in all_deptypes:
             assert canonical_deptype(v) == (v,)
 
         # tuples

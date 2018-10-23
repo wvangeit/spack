@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the LICENSE file for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,9 +33,9 @@ class Simplemoc(MakefilePackage):
         light water reactor simulation."""
 
     homepage = "https://github.com/ANL-CESAR/SimpleMOC/"
-    url = "https://github.com/ANL-CESAR/SimpleMOC/archive/master.tar.gz"
+    url = "https://github.com/ANL-CESAR/SimpleMOC/archive/v4.tar.gz"
 
-    version('1.0', 'd8827221a4ae76e9766a32e16d143e60')
+    version('4', sha256='a39906014fdb234c43bf26e1919bdc8a13097788812e0b353a492b8e568816a6')
 
     tags = ['proxy-app']
 

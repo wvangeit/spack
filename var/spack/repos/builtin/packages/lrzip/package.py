@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,9 +34,10 @@ class Lrzip(Package):
     but not both."""
 
     homepage = 'http://lrzip.kolivas.org'
-    url = 'https://github.com/ckolivas/lrzip/archive/v0.630.tar.gz'
+    url      = 'https://github.com/ckolivas/lrzip/archive/v0.630.tar.gz'
+    git      = 'https://github.com/ckolivas/lrzip.git'
 
-    version('master', git='https://github.com/ckolivas/lrzip.git')
+    version('master', branch='master')
     version('0.630', '3ca7f1d1365aa105089d1fbfc6b0924a')
     version('0.621', '1f07227b39ae81a98934411e8611e341')
     version('0.616', 'd40bdb046d0807ef602e36b1e9782cc0')

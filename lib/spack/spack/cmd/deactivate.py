@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,9 +25,9 @@
 import argparse
 import llnl.util.tty as tty
 
-import spack
 import spack.cmd
 import spack.store
+from spack.filesystem_view import YamlFilesystemView
 from spack.graph import topological_sort
 
 description = "deactivate a package extension"
@@ -39,6 +39,9 @@ def setup_parser(subparser):
     subparser.add_argument(
         '-f', '--force', action='store_true',
         help="run deactivation even if spec is NOT currently activated")
+    subparser.add_argument(
+        '-v', '--view', metavar='VIEW', type=str,
+        help="the view to operate on")
     subparser.add_argument(
         '-a', '--all', action='store_true',
         help="deactivate all extensions of an extendable package, or "
@@ -56,18 +59,29 @@ def deactivate(parser, args):
     spec = spack.cmd.disambiguate_spec(specs[0])
     pkg = spec.package
 
+    if args.view:
+        target = args.view
+    elif pkg.is_extension:
+        target = pkg.extendee_spec.prefix
+    elif pkg.extendable:
+        target = spec.prefix
+
+    view = YamlFilesystemView(target, spack.store.layout)
+
     if args.all:
         if pkg.extendable:
             tty.msg("Deactivating all extensions of %s" % pkg.spec.short_spec)
-            ext_pkgs = spack.store.db.installed_extensions_for(spec)
+            ext_pkgs = spack.store.db.activated_extensions_for(
+                spec, view.extensions_layout)
 
             for ext_pkg in ext_pkgs:
                 ext_pkg.spec.normalize()
-                if ext_pkg.activated:
-                    ext_pkg.do_deactivate(force=True)
+                if ext_pkg.is_activated(view):
+                    ext_pkg.do_deactivate(view, force=True)
 
         elif pkg.is_extension:
-            if not args.force and not spec.package.activated:
+            if not args.force and \
+               not spec.package.is_activated(view):
                 tty.die("%s is not activated." % pkg.spec.short_spec)
 
             tty.msg("Deactivating %s and all dependencies." %
@@ -80,9 +94,8 @@ def deactivate(parser, args):
                 espec = index[name]
                 epkg = espec.package
                 if epkg.extends(pkg.extendee_spec):
-                    if epkg.activated or args.force:
-
-                        epkg.do_deactivate(force=args.force)
+                    if epkg.is_activated(view) or args.force:
+                        epkg.do_deactivate(view, force=args.force)
 
         else:
             tty.die(
@@ -94,7 +107,8 @@ def deactivate(parser, args):
             tty.die("spack deactivate requires an extension.",
                     "Did you mean 'spack deactivate --all'?")
 
-        if not args.force and not spec.package.activated:
+        if not args.force and \
+           not spec.package.is_activated(view):
             tty.die("Package %s is not activated." % specs[0].short_spec)
 
-        spec.package.do_deactivate(force=args.force)
+        spec.package.do_deactivate(view, force=args.force)

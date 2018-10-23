@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,9 +29,9 @@ class Kentutils(MakefilePackage):
     """Jim Kent command line bioinformatic utilities"""
 
     homepage = "https://github.com/ENCODE-DCC/kentUtils"
-    url      = "https://github.com/ENCODE-DCC/kentUtils"
+    git      = "https://github.com/ENCODE-DCC/kentUtils.git"
 
-    version('302.1', git='https://github.com/ENCODE-DCC/kentUtils.git', commit='d8376c5d52a161f2267346ed3dc94b5dce74c2f9')
+    version('302.1', commit='d8376c5d52a161f2267346ed3dc94b5dce74c2f9')
 
     depends_on('libpng')
     depends_on('openssl')

@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@ class Gettext(AutotoolsPackage):
     """GNU internationalization (i18n) and localization (l10n) library."""
 
     homepage = "https://www.gnu.org/software/gettext/"
-    url      = "http://ftpmirror.gnu.org/gettext/gettext-0.19.7.tar.xz"
+    url      = "https://ftpmirror.gnu.org/gettext/gettext-0.19.7.tar.xz"
 
     version('0.19.8.1', 'df3f5690eaa30fd228537b00cb7b7590')
     version('0.19.7',   'f81e50556da41b44c1d59ac93474dca5')
@@ -73,7 +73,7 @@ class Gettext(AutotoolsPackage):
             '--with-included-gettext',
             '--with-included-libcroco',
             '--without-emacs',
-            '--with-lispdir=%s/emacs/site-lisp/gettext' % prefix.share,
+            '--with-lispdir=%s/emacs/site-lisp/gettext' % self.prefix.share,
             '--without-cvs'
         ]
 
@@ -84,8 +84,10 @@ class Gettext(AutotoolsPackage):
             config_args.append('--disable-curses')
 
         if '+libxml2' in spec:
-            config_args.append('--with-libxml2-prefix={0}'.format(
+            config_args.append('CPPFLAGS=-I{0}/include'.format(
                 spec['libxml2'].prefix))
+            config_args.append('LDFLAGS=-L{0} -Wl,-rpath,{0}'.format(
+                spec['libxml2'].libs.directories[0]))
         else:
             config_args.append('--with-included-libxml')
 

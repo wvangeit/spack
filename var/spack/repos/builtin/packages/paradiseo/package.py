@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -28,19 +28,19 @@ from spack import *
 class Paradiseo(CMakePackage):
     """A C++ white-box object-oriented framework dedicated to the reusable
        design of metaheuristics."""
+
     homepage = "http://paradiseo.gforge.inria.fr/"
+    git      = "https://gforge.inria.fr/git/paradiseo/paradiseo.git"
 
     # Installing from the development version is a better option at this
     # point than using the very old supplied packages
-    version('head', git='https://gforge.inria.fr/git/paradiseo/paradiseo.git')
+    version('head')
 
     # This is a version that the package formula author has tested
     # successfully.  However, the clone is very large (~1Gb git
     # history). The history in the head version has been trimmed
     # significantly.
-    version(
-        'dev-safe', git='https://gforge.inria.fr/git/paradiseo/paradiseo.git',
-        commit='dbb8fbe9a786efd4d1c26408ac1883442e7643a6')
+    version('dev-safe', commit='dbb8fbe9a786efd4d1c26408ac1883442e7643a6')
 
     variant('mpi',      default=True,
             description='Compile with parallel and distributed '

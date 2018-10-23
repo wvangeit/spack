@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,8 +34,9 @@ class Opencoarrays(CMakePackage):
     """
 
     homepage = "http://www.opencoarrays.org/"
-    url      = "https://github.com/sourceryinstitute/OpenCoarrays/releases/download/1.8.4/OpenCoarrays-1.8.4.tar.gz"
+    url      = "https://github.com/sourceryinstitute/OpenCoarrays/releases/download/2.2.0/OpenCoarrays-2.2.0.tar.gz"
 
+    version('2.2.0', '9311547a85a21853111f1e8555ceab4593731c6fd9edb64cfb9588805f9d1a0d')
     version('1.8.10', '9ba1670647db4d986634abf743abfd6a')
     version('1.8.4', '7c9eaffc3a0b5748d0d840e52ec9d4ad')
     version('1.8.0', 'ca78d1507b2a118c75128c6c2e093e27')
@@ -48,6 +49,9 @@ class Opencoarrays(CMakePackage):
                     'MinSizeRel', 'CodeCoverage'))
 
     depends_on('mpi')
+    # This patch removes a bunch of checks for the version of MPI available on
+    # the system. They make the Crays hang.
+    patch('CMakeLists.patch', when='platform=cray')
 
     def cmake_args(self):
         args = []

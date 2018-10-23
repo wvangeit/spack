@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,6 +33,8 @@ class Scotch(Package):
     url      = "http://gforge.inria.fr/frs/download.php/latestfile/298/scotch_6.0.4.tar.gz"
     list_url = "http://gforge.inria.fr/frs/?group_id=248"
 
+    version('6.0.6', 'ef676a3118b5590c416176e402fac248')
+    version('6.0.5a', '8430dff7175a1dfd5a3258e75260cf71')
     version('6.0.4', 'd58b825eb95e1db77efe8c6ff42d329f')
     version('6.0.3', '10b0cc0f184de2de99859eafaca83cfc')
     version('6.0.0', 'c50d6187462ba801f9a82133ee666e8e')
@@ -60,6 +62,9 @@ class Scotch(Package):
     # Version-specific patches
     patch('nonthreaded-6.0.4.patch', when='@6.0.4')
     patch('esmumps-ldflags-6.0.4.patch', when='@6.0.4')
+    patch('metis-headers-6.0.4.patch', when='@6.0.4')
+
+    patch('libscotchmetis-return-6.0.5a.patch', when='@6.0.5a')
 
     # NOTE: In cross-compiling environment parallel build
     # produces weird linker errors.
@@ -91,7 +96,7 @@ class Scotch(Package):
             libraries = ['libesmumps'] + libraries
 
         scotchlibs = find_libraries(
-            libraries, root=self.prefix, recurse=True, shared=shared
+            libraries, root=self.prefix, recursive=True, shared=shared
         )
         if '+compression' in self.spec:
             zlibs = self.spec['zlib'].libs
@@ -159,7 +164,7 @@ class Scotch(Package):
         if self.compiler.name == 'gcc':
             cflags.append('-Drestrict=__restrict')
         elif self.compiler.name == 'intel':
-            cflags.append('-restrict')
+            cflags.append('-Drestrict=')
 
         mpicc_path = self.spec['mpi'].mpicc if '+mpi' in self.spec else 'mpicc'
         makefile_inc.append('CCS       = $(CC)')

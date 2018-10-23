@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,12 +31,11 @@ class Gperftools(AutotoolsPackage):
        heap-profiler, and cpu-profiler.
 
     """
-    homepage = "https://code.google.com/p/gperftools"
-    url      = "https://googledrive.com/host/0B6NtGsLhIcf7MWxMMF9JdTN3UVk/gperftools-2.3.tar.gz"
+    homepage = "https://github.com/gperftools/gperftools"
+    url      = "https://github.com/gperftools/gperftools/releases/download/gperftools-2.7/gperftools-2.7.tar.gz"
 
-    version('2.4', '2171cea3bbe053036fb5d5d25176a160',
-            url="https://github.com/gperftools/gperftools/releases/download/gperftools-2.4/gperftools-2.4.tar.gz")
-    version('2.3', 'f54dd119f0e46ac1f13264f8d97adf90',
-            url="https://googledrive.com/host/0B6NtGsLhIcf7MWxMMF9JdTN3UVk/gperftools-2.3.tar.gz")
+    version('2.7', '1ee8c8699a0eff6b6a203e59b43330536b22bbcbe6448f54c7091e5efb0763c9')
+    version('2.4', '982a37226eb42f40714e26b8076815d5ea677a422fb52ff8bfca3704d9c30a2d')
+    version('2.3', '093452ad45d639093c144b4ec732a3417e8ee1f3744f2b0f8d45c996223385ce')
 
-    depends_on("libunwind")
+    depends_on("unwind")

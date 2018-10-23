@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,8 +23,16 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
 import platform as py_platform
-from spack.architecture import OperatingSystem
 
+from spack.architecture import OperatingSystem
+from spack.version import Version
+
+
+# FIXME: store versions inside OperatingSystem as a Version instead of string
+def macos_version():
+    """temporary workaround to return a macOS version as a Version object
+    """
+    return Version('.'.join(py_platform.mac_ver()[0].split('.')[:2]))
 
 class MacOs(OperatingSystem):
     """This class represents the macOS operating system. This will be
@@ -44,7 +52,9 @@ class MacOs(OperatingSystem):
                         "10.9": "mavericks",
                         "10.10": "yosemite",
                         "10.11": "elcapitan",
-                        "10.12": "sierra"}
+                        "10.12": "sierra",
+                        "10.13": "highsierra",
+                        "10.14": "mojave"}
 
         mac_ver = '.'.join(py_platform.mac_ver()[0].split('.')[:2])
         name = mac_releases.get(mac_ver, "macos")

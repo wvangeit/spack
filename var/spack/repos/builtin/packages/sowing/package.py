@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,7 @@ class Sowing(AutotoolsPackage):
     homepage = "http://www.mcs.anl.gov/petsc/index.html"
     url = "http://ftp.mcs.anl.gov/pub/petsc/externalpackages/sowing-1.1.23-p1.tar.gz"
 
+    version('1.1.25-p1', 'fc5e5664b80e606ad71ba9b85f4c86b9')
     version('1.1.23-p1', '65aaf3ae2a4c0f30d532fec291702e16')
 
     def build(self, spec, prefix):

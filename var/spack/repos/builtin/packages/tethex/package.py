@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,11 +34,12 @@ class Tethex(CMakePackage):
 
     homepage = "https://github.com/martemyev/tethex"
     url      = "https://github.com/martemyev/tethex/archive/v0.0.7.tar.gz"
+    git      = "https://github.com/martemyev/tethex.git"
 
     maintainers = ['davydden']
 
+    version('develop', branch='master')
     version('0.0.7', '6c9e4a18a6637deb4400c6d77ec03184')
-    version('develop', git='https://github.com/martemyev/tethex.git')
 
     variant('build_type', default='Release',
             description='The build type to build',

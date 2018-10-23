@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,8 @@ class AllineaForge(Package):
 
     homepage = "http://www.allinea.com/products/develop-allinea-forge"
 
-    version('6.0.4', 'df7f769975048477a36f208d0cd57d7e')
+    version('6.0', 'c85fec6d01680b5b46fea80111186244')
+    version('7.0', 'b70f4b140a71a5db0791d44684ac6cb5')
 
     # Licensing
     license_required = True
@@ -45,8 +46,8 @@ class AllineaForge(Package):
     def url_for_version(self, version):
         # TODO: add support for other architectures/distributions
         url = "http://content.allinea.com/downloads/"
-        return url + "allinea-forge-%s-Redhat-6.0-x86_64.tar" % version
+        return url + "arm-forge-latest-Redhat-%s-x86_64.tar" % version
 
     def install(self, spec, prefix):
-        textinstall = Executable('./textinstall.sh')
-        textinstall('--accept-licence', prefix)
+        bash = which("bash")
+        bash('./textinstall.sh', '--accept-licence', prefix)

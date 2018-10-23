@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,11 +24,20 @@
 ##############################################################################
 from spack import *
 
+import sys
+
 
 class Cnpy(CMakePackage):
     """cnpy: library to read/write .npy and .npz files in C/C++."""
 
     homepage = "https://github.com/rogersce/cnpy"
-    url      = "https://github.com/rogersce/cnpy"
+    git      = "https://github.com/rogersce/cnpy.git"
 
-    version('master', git='https://github.com/rogersce/cnpy.git', branch="master")
+    version('master', branch='master')
+
+    def cmake_args(self):
+        args = []
+        if sys.platform == 'darwin':
+            args.extend(['-DCMAKE_MACOSX_RPATH=ON'])
+
+        return args

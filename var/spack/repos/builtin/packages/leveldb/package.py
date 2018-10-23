@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import glob
 from spack import *
 
 
-class Leveldb(Package):
+class Leveldb(MakefilePackage):
     """LevelDB is a fast key-value storage library written at Google
     that provides an ordered mapping from string keys to string values."""
 
@@ -39,21 +39,14 @@ class Leveldb(Package):
     depends_on("snappy")
 
     def install(self, spec, prefix):
-        make()
+        mkdirp(prefix.lib.pkgconfig)
 
-        mkdirp(prefix.include)
-        mkdirp(prefix.lib)
-        mkdirp(join_path(prefix.lib, 'pkgconfig'))
+        libraries  = glob.glob('out-shared/libleveldb.*')
+        libraries += glob.glob('out-static/libleveldb.*')
+        for library in libraries:
+            install(library, prefix.lib)
 
-        cp = which('cp')
-
-        # cp --preserve=links libleveldb.* prefix/lib
-        args = glob.glob('out-shared/libleveldb.*') \
-            + glob.glob('out-static/libleveldb.*')
-        args.append(prefix.lib)
-        cp('--preserve=links', *args)
-
-        cp('-r', 'include/leveldb', prefix.include)
+        install_tree('include', prefix.include)
 
         with open(join_path(prefix.lib, 'pkgconfig', 'leveldb.pc'), 'w') as f:
             f.write('prefix={0}\n'.format(prefix))

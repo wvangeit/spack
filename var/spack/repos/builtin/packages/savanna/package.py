@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the LICENSE file for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
 from spack import *
-from distutils.dir_util import copy_tree
 
 
 class Savanna(MakefilePackage):
@@ -32,12 +31,10 @@ class Savanna(MakefilePackage):
     """
 
     homepage = "https://github.com/CODARcode/savanna"
-    url = "https://github.com/CODARcode/savanna/archive/v0.5.tar.gz"
+    git      = "https://github.com/CODARcode/savanna.git"
 
-    version('develop', git='https://github.com/CODARcode/savanna.git',
-            branch='master', submodules=True)
-    version('0.5', git='https://github.com/CODARcode/savanna.git',
-            tag='0.5', submodules=True)
+    version('develop', branch='master', submodules=True)
+    version('0.5', tag='0.5', submodules=True)
 
     variant('tau', default=False, description='Enable TAU profiling support')
 
@@ -48,4 +45,4 @@ class Savanna(MakefilePackage):
     depends_on('tau', when='+tau')
 
     def install(self, spec, prefix):
-        copy_tree('.', prefix)
+        install_tree('.', prefix)

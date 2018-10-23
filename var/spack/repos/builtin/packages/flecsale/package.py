@@ -6,7 +6,7 @@
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -28,10 +28,11 @@ from spack import *
 
 class Flecsale(CMakePackage):
     """Flecsale is an ALE code based on FleCSI"""
-    homepage = "https://github.com/laristra/flecsale"
-    url      = "https://github.com/laristra/flecsale/tarball/v1.0"
 
-    version('develop', git='https://github.com/laristra/flecsale', branch='master', submodules=True)
+    homepage = "https://github.com/laristra/flecsale"
+    git      = "https://github.com/laristra/flecsale.git"
+
+    version('develop', branch='master', submodules=True)
 
     variant('mpi', default=True,
             description='Build on top of mpi conduit for mpi inoperability')

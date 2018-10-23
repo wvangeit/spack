@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,8 @@ class PyMatplotlib(PythonPackage):
     homepage = "https://pypi.python.org/pypi/matplotlib"
     url      = "https://pypi.io/packages/source/m/matplotlib/matplotlib-2.0.2.tar.gz"
 
+    version('2.2.3', '403b0bddd751d71187416f20d4cff100')
+    version('2.2.2', 'dd1e49e041309a7fd4e32be8bf17c3b6')
     version('2.0.2', '061111784278bde89b5d4987014be4ca')
     version('2.0.0', '7aa54b06327f0e1c4f3877fc2f7d6b17')
     version('1.5.3', 'ba993b06113040fee6628d74b80af0fd')
@@ -67,6 +69,7 @@ class PyMatplotlib(PythonPackage):
 
     depends_on('libpng@1.2:')
     depends_on('freetype@2.3:')
+    patch('freetype-include-path.patch', when='@2.2.2:2.9.9')  # Patch to pick up correct freetype headers
 
     depends_on('py-numpy@1.6:', type=('build', 'run'))
     depends_on('py-dateutil@1.1:', type=('build', 'run'))
@@ -75,6 +78,7 @@ class PyMatplotlib(PythonPackage):
     depends_on('py-cycler@0.9:', type=('build', 'run'))
     depends_on('py-subprocess32', type=('build', 'run'), when='^python@:2.7')
     depends_on('py-functools32', type=('build', 'run'), when='^python@2.7')
+    depends_on('py-kiwisolver', type=('build', 'run'), when='@2.2.0:')
 
     # ------ Optional GUI frameworks
     depends_on('tk@8.3:', when='+tk')  # not 8.6.0 or 8.6.1
@@ -86,22 +90,26 @@ class PyMatplotlib(PythonPackage):
     depends_on('image-magick', when='+animation')
 
     # --------- Optional dependencies
-    depends_on('pkg-config', type='build')    # why not...
+    depends_on('pkgconfig', type='build')    # why not...
     depends_on('pil', when='+image', type=('build', 'run'))
     depends_on('py-ipython', when='+ipython', type=('build', 'run'))
     depends_on('ghostscript', when='+latex', type='run')
     depends_on('texlive', when='+latex', type='run')
 
     # Testing dependencies
-    # TODO: Add a 'test' deptype
-    # depends_on('py-nose', type='test')
-    # depends_on('py-mock', type='test')
+    depends_on('py-nose', type='test')
+    depends_on('py-mock', type='test')
 
     # Required libraries that ship with matplotlib
     # depends_on('agg@2.4:')
     depends_on('qhull@2012.1:')
     # depends_on('ttconv')
     depends_on('py-six@1.9.0:', type=('build', 'run'))
+
+    @run_before('build')
+    def set_cc(self):
+        if self.spec.satisfies('%intel'):
+            env['CC'] = spack_cxx
 
     @run_after('install')
     def set_backend(self):

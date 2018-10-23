@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,9 @@
 # License along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
+import contextlib
 import os
+
 
 system_paths = ['/', '/usr', '/usr/local']
 suffixes = ['bin', 'bin64', 'include', 'lib', 'lib64']
@@ -30,8 +32,21 @@ system_dirs = [os.path.join(p, s) for s in suffixes for p in system_paths] + \
     system_paths
 
 
+def is_system_path(path):
+    """Predicate that given a path returns True if it is a system path,
+    False otherwise.
+
+    Args:
+        path (str): path to a directory
+
+    Returns:
+        True or False
+    """
+    return os.path.normpath(path) in system_dirs
+
+
 def filter_system_paths(paths):
-    return [p for p in paths if os.path.normpath(p) not in system_dirs]
+    return [p for p in paths if not is_system_path(p)]
 
 
 def get_path(name):
@@ -72,4 +87,31 @@ def dump_environment(path):
     """Dump the current environment out to a file."""
     with open(path, 'w') as env_file:
         for key, val in sorted(os.environ.items()):
-            env_file.write("%s=%s\n" % (key, val))
+            env_file.write('export %s="%s"\n' % (key, val))
+
+
+@contextlib.contextmanager
+def set_env(**kwargs):
+    """Temporarily sets and restores environment variables.
+
+    Variables can be set as keyword arguments to this function.
+    """
+    saved = {}
+    for var, value in kwargs.items():
+        if var in os.environ:
+            saved[var] = os.environ[var]
+
+        if value is None:
+            if var in os.environ:
+                del os.environ[var]
+        else:
+            os.environ[var] = value
+
+    yield
+
+    for var, value in kwargs.items():
+        if var in saved:
+            os.environ[var] = saved[var]
+        else:
+            if var in os.environ:
+                del os.environ[var]

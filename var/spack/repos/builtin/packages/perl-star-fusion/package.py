@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the LICENSE file for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,9 +34,9 @@ class PerlStarFusion(Package):
     and spanning reads to a reference annotation set."""
 
     homepage = "https://github.com/STAR-Fusion/STAR-Fusion"
-    url      = "https://github.com/STAR-Fusion/STAR-Fusion.git"
+    git      = "https://github.com/STAR-Fusion/STAR-Fusion.git"
 
-    version('master', git='https://github.com/STAR-Fusion/STAR-Fusion.git', commit='a16a0a8')
+    version('master', commit='8c5a541')
 
     extends('perl')
 

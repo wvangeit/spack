@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,12 +29,23 @@ class Singularity(AutotoolsPackage):
     """Singularity is a container platform focused on supporting 'Mobility of
        Compute'"""
 
-    homepage = "http://singularity.lbl.gov/"
-    url      = "https://github.com/singularityware/singularity/archive/2.3.1.tar.gz"
+    homepage = "https://www.sylabs.io/singularity/"
+    url      = "https://github.com/singularityware/singularity/releases/download/2.5.2/singularity-2.5.2.tar.gz"
+    git      = "https://github.com/singularityware/singularity.git"
 
-    version('2.3.1', '292ff7fe3db09c854b8accf42f763f62')
+    # Versions before 2.5.2 suffer from a serious security problem.
+    # https://nvd.nist.gov/vuln/detail/CVE-2018-12021
+    version('develop', branch='master')
+    version('2.6.0', sha256='7c425211a099f6fa6f74037e6e17be58fb5923b0bd11aea745e48ef83c488b49')
+    version('2.5.2', '2edc1a8ac9a4d7d26fba6244f1c5fd95')
 
-    depends_on('m4',       type='build')
-    depends_on('autoconf', type='build')
-    depends_on('automake', type='build')
-    depends_on('libtool',  type='build')
+    depends_on('libarchive', when='@2.5.2:')
+    # these are only needed if we're grabbing the unreleased tree
+    depends_on('m4',       type='build', when='@develop')
+    depends_on('autoconf', type='build', when='@develop')
+    depends_on('automake', type='build', when='@develop')
+    depends_on('libtool',  type='build', when='@develop')
+
+    # When installing as root, the copy has to run before chmod runs
+    def install(self, spec, prefix):
+        make('install', parallel=False)

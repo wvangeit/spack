@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ class Wget(AutotoolsPackage):
     cron jobs, terminals without X-Windows support, etc."""
 
     homepage = "http://www.gnu.org/software/wget/"
-    url      = "http://ftp.gnu.org/gnu/wget/wget-1.19.1.tar.gz"
+    url      = "https://ftpmirror.gnu.org/wget/wget-1.19.1.tar.gz"
 
     version('1.19.1', '87cea36b7161fd43e3fd51a4e8b89689')
     version('1.17',   'c4c4727766f24ac716936275014a0536')
@@ -60,10 +60,9 @@ class Wget(AutotoolsPackage):
     depends_on('pcre', when='+pcre')
 
     depends_on('perl@5.12.0:', type='build')
-    depends_on('pkg-config@0.9.0:', type='build')
+    depends_on('pkgconfig', type='build')
 
-    # TODO: Add a 'test' deptype
-    # depends_on('valgrind', type='test')
+    depends_on('valgrind', type='test')
 
     build_directory = 'spack-build'
 

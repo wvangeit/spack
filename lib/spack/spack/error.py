@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,10 +25,14 @@
 from __future__ import print_function
 
 import sys
+import inspect
 
 import llnl.util.tty as tty
-import spack
-import inspect
+
+
+#: whether we should write stack traces or short error messages
+#: this is module-scoped because it needs to be set very early
+debug = False
 
 
 class SpackError(Exception):
@@ -59,7 +63,7 @@ class SpackError(Exception):
         """Print extended debug information about this exception.
 
         This is usually printed when the top-level Spack error handler
-        calls ``die()``, but it acn be called separately beforehand if a
+        calls ``die()``, but it can be called separately beforehand if a
         lower-level error handler needs to print error context and
         continue without raising the exception to the top level.
         """
@@ -73,7 +77,7 @@ class SpackError(Exception):
             sys.stderr.write('\n')
 
         # stack trace, etc. in debug mode.
-        if spack.debug:
+        if debug:
             if self.traceback:
                 # exception came from a build child, already got
                 # traceback in child, so print it.
@@ -111,16 +115,6 @@ class UnsupportedPlatformError(SpackError):
 
     def __init__(self, message):
         super(UnsupportedPlatformError, self).__init__(message)
-
-
-class NoNetworkConnectionError(SpackError):
-    """Raised when an operation needs an internet connection."""
-
-    def __init__(self, message, url):
-        super(NoNetworkConnectionError, self).__init__(
-            "No network connection: " + str(message),
-            "URL was: " + str(url))
-        self.url = url
 
 
 class SpecError(SpackError):

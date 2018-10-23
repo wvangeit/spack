@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ class PyBiomFormat(PythonPackage):
 
     variant('h5py', default=True, description='For use with BIOM 2.0+ files')
 
-    depends_on('py-setuptools', type='build')
+    depends_on('py-setuptools', type=('build', 'run'))
     depends_on('py-cython', type='build')
     depends_on('py-h5py', type=('build', 'run'), when='+h5py')
     depends_on('py-click', type=('build', 'run'))
@@ -46,3 +46,4 @@ class PyBiomFormat(PythonPackage):
     depends_on('py-scipy@0.13.0:', type=('build', 'run'))
     depends_on('py-pandas@0.19.2:', type=('build', 'run'))
     depends_on('py-six@1.10.0:', type=('build', 'run'))
+    depends_on('py-pyqi', type=('build', 'run'))

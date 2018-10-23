@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,8 +23,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
 from spack import *
+import glob
 import os
-import shutil
 import tempfile
 
 
@@ -36,13 +36,15 @@ class Ncl(Package):
 
     homepage = "https://www.ncl.ucar.edu"
 
-    version('6.4.0', 'a981848ddcaf1c263279648265f24766',
-            url='https://www.earthsystemgrid.org/download/fileDownload.html?logicalFileId=86b9bec2-fa01-11e6-a976-00c0f03d5b7c',
-            extension='tar.gz')
+    url = "https://github.com/NCAR/ncl/archive/6.4.0.tar.gz"
 
-    patch('spack_ncl.patch')
+    version('6.4.0', 'd891452cda7bb25afad9b6c876c73986')
+
+    patch('spack_ncl.patch', when="@6.4.0")
     # Make ncl compile with hdf5 1.10
-    patch('hdf5.patch')
+    patch('hdf5.patch', when="@6.4.0")
+    # ymake-filter's buffer may overflow
+    patch('ymake-filter.patch', when="@6.4.0")
 
     # This installation script is implemented according to this manual:
     # http://www.ncl.ucar.edu/Download/build_from_src.shtml
@@ -62,6 +64,7 @@ class Ncl(Package):
     depends_on('bison', type='build')
     depends_on('flex+lex')
     depends_on('libiconv')
+    depends_on('tcsh')
 
     # Also, the manual says that ncl requires zlib, but that comes as a
     # mandatory dependency of libpng, which is a mandatory dependency of cairo.
@@ -82,6 +85,9 @@ class Ncl(Package):
     depends_on('hdf5+szip')
     depends_on('szip')
 
+    # ESMF is only required at runtime (for ESMF_regridding.ncl)
+    depends_on('esmf', type='run')
+
     # In Spack, we also do not have an option to compile netcdf without DAP
     # support, so we will tell the ncl configuration script that we have it.
 
@@ -98,6 +104,25 @@ class Ncl(Package):
         md5='10aff8d7950f5e0e2fb6dd2e340be2c9',
         placement='triangle_src',
         when='+triangle')
+
+    sanity_check_is_file = ['bin/ncl']
+
+    def patch(self):
+        # Make configure scripts use Spack's tcsh
+        files = ['Configure'] + glob.glob('config/*')
+
+        filter_file('^#!/bin/csh -f', '#!/usr/bin/env csh', *files)
+
+    @run_before('install')
+    def filter_sbang(self):
+        # Filter sbang before install so Spack's sbang hook can fix it up
+        files = glob.glob('ncarg2d/src/bin/scripts/*')
+        files += glob.glob('ncarview/src/bin/scripts/*')
+        files += glob.glob('ni/src/scripts/*')
+
+        csh = join_path(self.spec['tcsh'].prefix.bin, 'csh')
+
+        filter_file('^#!/bin/csh', '#!{0}'.format(csh), *files)
 
     def install(self, spec, prefix):
 
@@ -165,7 +190,7 @@ class Ncl(Package):
             # Parent installation directory :
             '\'' + self.spec.prefix + '\'\n',
             # System temp space directory   :
-            '\'' + tempfile.mkdtemp(prefix='ncl_ncar_') + '\'\n',
+            '\'' + tempfile.gettempdir() + '\'\n',
             # Build NetCDF4 feature support (optional)?
             'y\n'
         ]
@@ -237,8 +262,8 @@ class Ncl(Package):
             triangle_src = join_path(self.stage.source_path, 'triangle_src')
             triangle_dst = join_path(self.stage.source_path, 'ni', 'src',
                                      'lib', 'hlu')
-            shutil.copy(join_path(triangle_src, 'triangle.h'), triangle_dst)
-            shutil.copy(join_path(triangle_src, 'triangle.c'), triangle_dst)
+            copy(join_path(triangle_src, 'triangle.h'), triangle_dst)
+            copy(join_path(triangle_src, 'triangle.c'), triangle_dst)
 
     @staticmethod
     def delete_files(*filenames):

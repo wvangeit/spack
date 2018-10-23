@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,13 +30,15 @@ class Czmq(AutotoolsPackage):
     homepage = "http://czmq.zeromq.org"
     url      = "https://github.com/zeromq/czmq/archive/v4.0.2.tar.gz"
 
+    version('4.1.1', 'a2ab03cddd14399c6ba75b030a256211')
     version('4.0.2', 'a65317a3fb8238cf70e3e992e381f9cc')
     version('3.0.2', '23e9885f7ee3ce88d99d0425f52e9be1')
 
     depends_on('libtool', type='build')
     depends_on('automake', type='build')
     depends_on('autoconf', type='build')
-    depends_on('pkg-config', type='build')
+    depends_on('pkgconfig', type='build')
+    depends_on("libuuid")
     depends_on('zeromq')
 
     def configure_args(self):

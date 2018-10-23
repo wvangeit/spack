@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -42,10 +42,10 @@ class Cblas(Package):
     def patch(self):
         mf = FileFilter('Makefile.in')
 
-        mf.filter('^BLLIB =.*', 'BLLIB = %s/libblas.a' %
-                  self.spec['blas'].prefix.lib)
+        mf.filter('^BLLIB =.*', 'BLLIB = {0}'.format(
+                  ' '.join(self.spec['blas'].libs.libraries)))
         mf.filter('^CC =.*', 'CC = cc')
-        mf.filter('^FC =.*', 'FC = f90')
+        mf.filter('^FC =.*', 'FC = fc')
 
     def install(self, spec, prefix):
         make('all')
@@ -53,6 +53,6 @@ class Cblas(Package):
         mkdirp(prefix.include)
 
         # Rename the generated lib file to libcblas.a
-        install('./lib/cblas_LINUX.a', '%s/libcblas.a' % prefix.lib)
-        install('./include/cblas.h', '%s' % prefix.include)
-        install('./include/cblas_f77.h', '%s' % prefix.include)
+        install('lib/cblas_LINUX.a', prefix.lib.join('libcblas.a'))
+        install('include/cblas.h', prefix.include)
+        install('include/cblas_f77.h', prefix.include)

@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,10 +31,11 @@ class Raft(CMakePackage):
        Toolbox under development at Brazilian Synchrotron Light Source."""
 
     homepage = "https://bitbucket.org/gill_martinez/raft_aps"
-    url = "https://bitbucket.org/gill_martinez/raft_aps/get/1.2.3.tar.gz"
+    url      = "https://bitbucket.org/gill_martinez/raft_aps/get/1.2.3.tar.gz"
+    git      = "https://bitbucket.org/gill_martinez/raft_aps.git"
 
+    version('develop', branch='master')
     version('1.2.3', '4d1b106d9b3493e63dde96f7dd44b834')
-    version('develop', git='https://bitbucket.org/gill_martinez/raft_aps.git')
 
     depends_on('mpi')
     depends_on('cmake', type='build')

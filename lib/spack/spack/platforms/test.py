@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
 from spack.architecture import Platform, Target
-from spack.architecture import OperatingSystem as OS
+from spack.architecture import OperatingSystem
 
 
 class Test(Platform):
@@ -41,9 +41,11 @@ class Test(Platform):
         self.add_target(self.default, Target(self.default))
         self.add_target(self.front_end, Target(self.front_end))
 
-        self.add_operating_system(self.default_os, OS('debian', 6))
-        self.add_operating_system(self.front_os, OS('redhat', 6))
+        self.add_operating_system(
+            self.default_os, OperatingSystem('debian', 6))
+        self.add_operating_system(
+            self.front_os, OperatingSystem('redhat', 6))
 
     @classmethod
-    def detect(self):
+    def detect(cls):
         return True

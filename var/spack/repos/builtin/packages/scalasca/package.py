@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -38,14 +38,23 @@ class Scalasca(AutotoolsPackage):
     homepage = "http://www.scalasca.org"
     url = "http://apps.fz-juelich.de/scalasca/releases/scalasca/2.1/dist/scalasca-2.1.tar.gz"
 
+    version('2.4',   'c9d09b71721a8345f172fc05debc38b3')
     version('2.3.1', 'a83ced912b9d2330004cb6b9cefa7585')
     version('2.2.2', '2bafce988b0522d18072f7771e491ab9')
     version('2.1',   'bab9c2b021e51e2ba187feec442b96e6')
 
+    variant('gui', default=False, description='Depend on CubeGUI')
+    variant('scorep', default=False, description='Build with Score-P support')
+
     depends_on("mpi")
 
+    # version 2.4
+    depends_on('cubelib@4.4:', when='@2.4:')
+    depends_on('scorep@1.2:', when='@2.4: +scorep')
+    depends_on('cubegui@4.4:', when='@2.4: +gui')
+
     # version 2.3
-    depends_on('cube@4.3:', when='@2.3:')
+    depends_on('cube@4.3:', when='@2.:2.3.999')
     depends_on('otf2@2:', when='@2.3:')
 
     # version 2.1+
@@ -60,10 +69,14 @@ class Scalasca(AutotoolsPackage):
 
         config_args = ["--enable-shared"]
 
-        config_args.append("--with-cube=%s" % spec['cube'].prefix.bin)
         config_args.append("--with-otf2=%s" % spec['otf2'].prefix.bin)
 
-        if self.spec['mpi'].name == 'openmpi':
+        if spec.satisfies('@:2.3.999'):
+            config_args.append("--with-cube=%s" % spec['cube'].prefix.bin)
+        elif spec.satisfies('@2.4:'):
+            config_args.append("--with-cubew=%s" % spec['cubew'].prefix.bin)
+
+        if spec['mpi'].name == 'openmpi':
             config_args.append("--with-mpi=openmpi")
         elif self.spec.satisfies('^mpich@3:'):
             config_args.append("--with-mpi=mpich3")

@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,10 +33,11 @@ def get_submodules():
 
 class Rust(Package):
     """The rust programming language toolchain"""
-    homepage = "http://www.rust-lang.org"
-    url = "https://github.com/rust-lang/rust"
 
-    version('1.8.0', tag='1.8.0', git="https://github.com/rust-lang/rust")
+    homepage = "http://www.rust-lang.org"
+    git      = "https://github.com/rust-lang/rust.git"
+
+    version('1.8.0', tag='1.8.0')
 
     resource(name='cargo',
              git="https://github.com/rust-lang/cargo.git",

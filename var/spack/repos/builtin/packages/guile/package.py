@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ class Guile(AutotoolsPackage):
     the official extension language for the GNU operating system."""
 
     homepage = "https://www.gnu.org/software/guile/"
-    url      = "https://ftp.gnu.org/gnu/guile/guile-2.2.0.tar.gz"
+    url      = "https://ftpmirror.gnu.org/guile/guile-2.2.0.tar.gz"
 
     version('2.2.0',  '0d5de8075b965f9ee5ea04399b60a3f9')
     version('2.0.14', '333b6eec83e779935a45c818f712484e')
@@ -45,7 +45,7 @@ class Guile(AutotoolsPackage):
     depends_on('bdw-gc@7.0:')
     depends_on('libffi')
     depends_on('readline', when='+readline')
-    depends_on('pkg-config', type='build')
+    depends_on('pkgconfig', type='build')
 
     build_directory = 'spack-build'
 

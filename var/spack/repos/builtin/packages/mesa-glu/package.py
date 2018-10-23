@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,6 @@
 # License along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
-#
 from spack import *
 
 
@@ -37,3 +36,13 @@ class MesaGlu(AutotoolsPackage):
     variant('mesa', default=True,
        description='Usually depends on mesa, disable for accelerated OpenGL')
     depends_on('mesa', when='+mesa')
+
+    provides('glu@1.3')
+
+    @property
+    def libs(self):
+        for dir in ['lib64', 'lib']:
+            libs = find_libraries('libGLU', join_path(self.prefix, dir),
+                                  shared=True, recursive=False)
+            if libs:
+                return libs

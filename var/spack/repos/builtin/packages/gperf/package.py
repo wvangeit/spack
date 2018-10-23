@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@ class Gperf(AutotoolsPackage):
     single string comparison only."""
 
     homepage = "https://www.gnu.org/software/gperf/"
-    url      = "http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz"
+    url      = "https://ftpmirror.gnu.org/gperf/gperf-3.0.4.tar.gz"
 
     version('3.0.4', 'c1f1db32fb6598d6a93e6e88796a8632')
 

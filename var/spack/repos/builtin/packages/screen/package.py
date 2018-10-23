@@ -1,12 +1,12 @@
 ##############################################################################
-# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Copyright (c) 2013-2018, Lawrence Livermore National Security, LLC.
 # Produced at the Lawrence Livermore National Laboratory.
 #
 # This file is part of Spack.
 # Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
 # LLNL-CODE-647188
 #
-# For details, see https://github.com/llnl/spack
+# For details, see https://github.com/spack/spack
 # Please also see the NOTICE and LICENSE files for our notice and the LGPL.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,8 +31,9 @@ class Screen(AutotoolsPackage):
     """
 
     homepage = "https://www.gnu.org/software/screen/"
-    url      = "http://ftp.gnu.org/gnu/screen/screen-4.3.1.tar.gz"
+    url      = "https://ftpmirror.gnu.org/screen/screen-4.3.1.tar.gz"
 
+    version('4.6.2', 'a0f529d3333b128dfaa324d978ba73a8')
     version('4.3.1', '5bb3b0ff2674e29378c31ad3411170ad')
     version('4.3.0', 'f76d28eadc4caaf6cdff00685ae6ad46')
     version('4.2.1', '419a0594e2b25039239af8b90eda7d92')
