@@ -31,6 +31,6 @@ class PyDeap(PythonPackage):
     homepage = "https://github.com/deap/deap"
     url = "https://pypi.io/packages/source/d/deap/deap-1.2.2.tar.gz"
 
-    version('1.2.2', '95c63e66d755ec206c80fdb2908851c0bef420ee8651ad7be4f0578e9e909bcf')
+    version('1.2.2', sha256='95c63e66d755ec206c80fdb2908851c0bef420ee8651ad7be4f0578e9e909bcf')
     
     depends_on('py-setuptools', type='build')

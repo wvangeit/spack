@@ -31,12 +31,12 @@ class PyBluepymm(PythonPackage):
     homepage = "https://github.com/BlueBrain/BluePyMM"
     url = "https://pypi.io/packages/source/b/bluepymm/bluepymm-0.6.35.tar.gz"
 
-    version('0.6.35', '8455e4543057e2a4889cce46bfe841a4041eaa039d6aece1ac2ccfdb755c1ccf')
+    version('0.6.35', sha256='8455e4543057e2a4889cce46bfe841a4041eaa039d6aece1ac2ccfdb755c1ccf')
     
     depends_on('py-setuptools', type='build')
     depends_on('py-bluepyopt', type='run')
     depends_on('py-matplotlib', type='run')
-    # THe below dependency should disappear once the matplotlib package is fixed
+    # The below dependency should disappear once the matplotlib package is fixed
     depends_on('py-backports-functools-lru-cache', type='run')
     depends_on('py-pandas', type='run')
     depends_on('py-numpy', type='run')

@@ -31,7 +31,7 @@ class PyBluepyopt(PythonPackage):
     homepage = "https://github.com/BlueBrain/BluePyOpt"
     url = "https://pypi.io/packages/source/b/bluepyopt/bluepyopt-1.6.56.tar.gz"
 
-    version('1.6.56', '1c57c91465ca4b947fe157692e7004a3e6df02e4151e3dc77a8831382a8f1ab9')
+    version('1.6.56', sha256='1c57c91465ca4b947fe157692e7004a3e6df02e4151e3dc77a8831382a8f1ab9')
     
     variant('neuron', default=True, description="Use BluePyOpt together with NEURON")
 
